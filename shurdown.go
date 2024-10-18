@@ -13,7 +13,7 @@ import (
 )
 
 // Run 函数封装了启动和优雅退出的逻辑
-func Run(router *gin.Engine, addr string) {
+func RunServer(router *gin.Engine, addr string) {
 	// 创建一个HTTP服务器
 	srv := &http.Server{
 		Addr:    addr,
@@ -31,7 +31,7 @@ func Run(router *gin.Engine, addr string) {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	log.Println("Shutting down server...")
+	Info("Shutting down server......")
 
 	// 创建一个上下文，设置超时时间为5秒
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -42,19 +42,19 @@ func Run(router *gin.Engine, addr string) {
 		log.Fatal("Server forced to shutdown:", err)
 	}
 
-	log.Println("Server exiting")
+	Info("Server Exiting")
 }
 
-func main() {
-	// 创建一个Gin引擎
-	router := gin.Default()
+// func main() {
+// 	// 创建一个Gin引擎
+// 	router := gin.Default()
 
-	// 定义一个简单的路由
-	router.GET("/", func(c *gin.Context) {
-		time.Sleep(5 * time.Second) // 模拟一个耗时的请求
-		c.String(http.StatusOK, "Hello, World!")
-	})
+// 	// 定义一个简单的路由
+// 	router.GET("/", func(c *gin.Context) {
+// 		time.Sleep(5 * time.Second) // 模拟一个耗时的请求
+// 		c.String(http.StatusOK, "Hello, World!")
+// 	})
 
-	// 调用封装的Run函数启动服务器
-	Run(router, ":8080")
-}
+// 	// 调用封装的Run函数启动服务器
+// 	Run(router, ":8080")
+// }
