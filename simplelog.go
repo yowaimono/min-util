@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"runtime"
 	"strings"
 	"sync"
@@ -33,7 +34,12 @@ func GetLogger() *Logger {
 // logf 是日志记录的通用函数
 func (l *Logger) logf(level, format string, v ...interface{}) {
 	now := time.Now().Format("2006-01-02 15:04:05")
+
+	//     _, filename, _, _ := runtime.Caller(1)
+	//     return path.Base(path.Dir(filename))
+
 	_, file, line, _ := runtime.Caller(2)
+	pkname := path.Base(path.Dir(file))
 	file = file[strings.LastIndex(file, "/")+1:]
 	message := fmt.Sprintf(format, v...)
 
@@ -41,6 +47,11 @@ func (l *Logger) logf(level, format string, v ...interface{}) {
 	pc, _, _, _ := runtime.Caller(2)
 	function := runtime.FuncForPC(pc).Name()
 	function = function[strings.LastIndex(function, ".")+1:]
+
+	// 获取包名
+	// packageName := runtime.FuncForPC(pc).Name()
+	// packageName = packageName[:strings.LastIndex(packageName, ".")]
+	// packageName = packageName[strings.LastIndex(packageName, "/")+1:]
 
 	// 添加颜色
 	var levelColor string
@@ -59,7 +70,7 @@ func (l *Logger) logf(level, format string, v ...interface{}) {
 		levelColor = "\033[0m" // 默认颜色
 	}
 
-	l.logger.Printf("[\033[35mMIN\033[0m] [\033[34m%s\033[0m] [\033[36m%s:%d -> %s\033[0m] [\033[33m%s%s\033[0m] %s", now, file, line, function, levelColor, level, message)
+	l.logger.Printf("[\033[35mMIN\033[0m] [\033[34m%s\033[0m] [\033[36m%s/%s:%d -> %s\033[0m] [\033[33m%s%s\033[0m] %s", now, pkname, file, line, function, levelColor, level, message)
 }
 
 // Info 记录信息级别的日志
@@ -87,3 +98,4 @@ func Fatal(format string, v ...interface{}) {
 	GetLogger().logf("FATAL", format, v...)
 	os.Exit(1)
 }
+
