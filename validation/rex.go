@@ -87,3 +87,32 @@ func IsValidDate(date string) bool {
 	match, _ := reg.MatchString(date)
 	return match
 }
+
+
+// IsValidTime 验证时间格式（HH:MM:SS）
+func IsValidTime(timeStr string) bool {
+	reg := regexp2.MustCompile(`^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$`, 0)
+	match, _ := reg.MatchString(timeStr)
+	return match
+}
+
+// IsValidCreditCard 验证信用卡号
+func IsValidCreditCard(cardNumber string) bool {
+	reg := regexp2.MustCompile(`^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|7[0-9]{15}|(2131|1800|35\d{3})\d{11})$`, 0)
+	match, _ := reg.MatchString(cardNumber)
+	return match
+}
+
+// IsValidUsername 验证用户名
+func IsValidUsername(username string) bool {
+	reg := regexp2.MustCompile(`^[a-zA-Z0-9_]{4,20}$`, 0)
+	match, _ := reg.MatchString(username)
+	return match
+}
+
+// IsPositiveInteger 验证正整数
+func IsPositiveInteger(num string) bool {
+	reg := regexp2.MustCompile(`^[1-9]\d*$`, 0)
+	match, _ := reg.MatchString(num)
+	return match
+}
